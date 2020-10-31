@@ -16,7 +16,7 @@ subtask(TASK_JEST_RUN_TESTS)
       results: AggregatedResult;
       globalConfig: Config.GlobalConfig;
     }>((resolve, reject) => {
-      const jestConfig:  = { watch };
+      const jestConfig: any = { watch };
       return runCLI(jestConfig, [config.paths.root + "/jest.config.js"])
         .then((result) => resolve(result))
         .catch((error) => reject(error));

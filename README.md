@@ -1,14 +1,17 @@
+[![Build Status](https://travis-ci.com/rryter/hardhat-jest-plugin.svg?branch=main)](https://travis-ci.com/rryter/hardhat-jest-plugin)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+
 # hardhat-jest-plugin
 
-The plugin enables the use of Jest as a test runner.
+👷‍♀️👷‍♂️
+
+The plugin enables the use of [Jest](https://jestjs.io/) as a test runner.
 
 ## What
 
 This plugin will make it possible to benefit from both the features Jest provides, as well as the HRE for an optimal debugging experience.
 
 ## Installation
-
-<_A step-by-step guide on how to install the plugin_>
 
 ```bash
 npm install hardhat-jest-plugin jest

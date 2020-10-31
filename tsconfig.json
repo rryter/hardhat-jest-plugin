@@ -8,11 +8,9 @@
     "outDir": "./dist",
     "strict": true,
     "rootDirs": ["./src", "./test"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": ["esnext.asynciterable"]
   },
   "exclude": ["dist", "node_modules"],
-  "include": [
-    "./test",
-    "./src"
-  ]
+  "include": ["./test", "./src"]
 }

@@ -1,49 +1,65 @@
-import { extendConfig, extendEnvironment } from "hardhat/config";
-import { lazyObject } from "hardhat/plugins";
-import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
-import path from "path";
+import type { AggregatedResult } from "@jest/test-result";
+import type { Config } from "@jest/types";
+import chalk from "chalk";
+import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
+import { subtask, task } from "hardhat/config";
+import { HARDHAT_NETWORK_NAME } from "hardhat/plugins";
 
-import { ExampleHardhatRuntimeEnvironmentField } from "./ExampleHardhatRuntimeEnvironmentField";
-// This import is needed to let the TypeScript compiler know that it should include your type
-// extensions in your npm package's types file.
-import "./type-extensions";
+const TASK_JEST = "test:jest";
+const TASK_JEST_RUN_TESTS = "jest:run";
 
-extendConfig(
-  (config: HardhatConfig, userConfig: Readonly<HardhatUserConfig>) => {
-    // We apply our default config here. Any other kind of config resolution
-    // or normalization should be placed here.
-    //
-    // `config` is the resolved config, which will be used during runtime and
-    // you should modify.
-    // `userConfig` is the config as provided by the user. You should not modify
-    // it.
-    //
-    // If you extended the `HardhatConfig` type, you need to make sure that
-    // executing this function ensures that the `config` object is in a valid
-    // state for its type, including its extentions. For example, you may
-    // need to apply a default value, like in this example.
-    const userPath = userConfig.paths?.newPath;
+subtask(TASK_JEST_RUN_TESTS)
+  .addFlag("watch", "Enables 'watch-mode'")
+  .setAction(async ({ watch }: { watch: boolean }, { config }) => {
+    const { runCLI } = await import("jest");
+    const testFailures = await new Promise<{
+      results: AggregatedResult;
+      globalConfig: Config.GlobalConfig;
+    }>((resolve, reject) => {
+      const jestConfig:  = { watch };
+      return runCLI(jestConfig, [config.paths.root + "/jest.config.js"])
+        .then((result) => resolve(result))
+        .catch((error) => reject(error));
+    });
 
-    let newPath: string;
-    if (userPath === undefined) {
-      newPath = path.join(config.paths.root, "newPath");
-    } else {
-      if (path.isAbsolute(userPath)) {
-        newPath = userPath;
-      } else {
-        // We resolve relative paths starting from the project's root.
-        // Please keep this convention to avoid confusion.
-        newPath = path.normalize(path.join(config.paths.root, userPath));
+    return testFailures.results;
+  });
+
+task(TASK_JEST, "Runs jest tests")
+  .addFlag("watch", "Watch-Mode")
+  .addFlag("noCompile", "Don't compile before running this task")
+  .setAction(
+    async (
+      {
+        watch,
+        testFiles,
+        noCompile,
+      }: {
+        watch: boolean;
+        testFiles: string[];
+        noCompile: boolean;
+      },
+      { run, network }
+    ) => {
+      if (!noCompile) {
+        await run(TASK_COMPILE, { quiet: true });
       }
+
+      const testFailures = await run(TASK_JEST_RUN_TESTS, { watch });
+
+      if (network.name === HARDHAT_NETWORK_NAME) {
+        const stackTracesFailures = await network.provider.send("hardhat_getStackTraceFailuresCount");
+
+        if (stackTracesFailures !== 0) {
+          console.warn(
+            chalk.yellow(
+              `Failed to generate ${stackTracesFailures} stack trace(s). Run Hardhat with --verbose to learn more.`
+            )
+          );
+        }
+      }
+
+      process.exitCode = testFailures;
+      return testFailures;
     }
-
-    config.paths.newPath = newPath;
-  }
-);
-
-extendEnvironment((hre) => {
-  // We add a field to the Hardhat Runtime Environment here.
-  // We use lazyObject to avoid initializing things until they are actually
-  // needed.
-  hre.example = lazyObject(() => new ExampleHardhatRuntimeEnvironmentField());
-});
+  );

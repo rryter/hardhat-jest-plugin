@@ -1,9 +1,9 @@
 {
-  "name": "hardhat-ts-plugin-boilerplate",
+  "name": "hardhat-jest-plugin",
   "version": "0.0.1",
-  "description": "Hardhat TypeScript plugin boilerplate",
-  "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",
-  "author": "Nomic Labs LLC",
+  "description": "Running Hardhat Tests with Jest",
+  "repository": "https://github.com/rryter/hardhat-jest-plugin.git",
+  "author": "Reto Ryter",
   "license": "MIT",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -43,5 +43,11 @@
   },
   "peerDependencies": {
     "hardhat": "^2.0.0"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "jest": "26.6.1",
+    "@jest/test-result": "26.6.1",
+    "@jest/types": "26.6.1"
   }
 }

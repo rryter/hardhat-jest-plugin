@@ -1,6 +1,6 @@
 {
   "name": "hardhat-jest-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha.0",
   "description": "Running Hardhat Tests with Jest",
   "repository": "https://github.com/rryter/hardhat-jest-plugin.git",
   "author": "Reto Ryter",

@@ -7,6 +7,8 @@
 
 The plugin enables the use of [Jest](https://jestjs.io/) as a test runner.
 
+![](hardhat-jest-plugin.gif)
+
 ## What
 
 This plugin will make it possible to benefit from both the features Jest provides, as well as the HRE for an optimal debugging experience.

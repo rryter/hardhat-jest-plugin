@@ -1,6 +1,6 @@
 {
   "name": "hardhat-jest-plugin",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Running Hardhat Tests with Jest",
   "repository": "https://github.com/rryter/hardhat-jest-plugin.git",
   "author": "Reto Ryter",
@@ -45,9 +45,9 @@
     "hardhat": "^2.0.0"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
-    "jest": "26.6.1",
     "@jest/test-result": "26.6.1",
-    "@jest/types": "26.6.1"
+    "@jest/types": "26.6.1",
+    "chalk": "^2.4.2",
+    "jest": "26.6.1"
   }
 }
